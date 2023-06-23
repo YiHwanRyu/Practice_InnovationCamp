@@ -40,5 +40,39 @@ public class RequestController {
         return String.format("Hello, @RequestParam.<br> name = %s, age = %d", name, age);
     }
 
+    // [Request sample]
+    // POST http://localhost:8080/hello/request/form/model
+    // Header
+    //  Content type: application/x-www-form-urlencoded
+    // Body
+    //  name=Robbie&age=95
+    @PostMapping("/form/model")
+    @ResponseBody
+    public String helloRequestBodyForm(@ModelAttribute Star star) {
+        return String.format("Hello, @ModelAttribute.<br> (name = %s, age = %d) ", star.name, star.age);
+    }
+
+    // [Request sample]
+    // GET http://localhost:8080/hello/request/form/param/model?name=Robbie&age=95
+    @GetMapping("/form/param/model")
+    @ResponseBody
+    public String helloRequestParam(Star star) { //@ModelAttribute생략가능
+        return String.format("Hello, @ModelAttribute.<br> (name = %s, age = %d) ", star.name, star.age);
+    }
+
+    // 원시타입, Wrapper, Date -> @RequestParam 으로 자동인식
+    // 클래스 등 객체 -> @ModelAttribute로 인식
+
+    // [Request sample]
+    // POST http://localhost:8080/hello/request/form/json
+    // Header
+    //  Content type: application/json
+    // Body
+    //  {"name":"Robbie","age":"95"}
+    @PostMapping("/form/json")
+    @ResponseBody
+    public String helloPostRequestJson(@RequestBody Star star) { // 여기서 @RequestBody 쓰면 Json Body형식의 요청을 Java 객체 형태로 바꿔줌
+        return String.format("Hello, @RequestBody.<br> (name = %s, age = %d) ", star.name, star.age);
+    }
 
 }
