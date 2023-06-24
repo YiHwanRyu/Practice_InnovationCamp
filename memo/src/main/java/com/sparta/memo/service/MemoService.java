@@ -4,15 +4,36 @@ import com.sparta.memo.dto.MemoRequestDto;
 import com.sparta.memo.dto.MemoResponseDto;
 import com.sparta.memo.entity.Memo;
 import com.sparta.memo.repository.MemoRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public class MemoService {
+
+//@Component // 빈객체로 등록(생성자로 만들어서 주입해줌!), @Autowired 하려면 빈등록 필수!
+//@RequiredArgsConstructor // 롬복으로 생성자 만들어줄 수 있음
+@Service
+public class MemoService { // 빈 등록이름: memoService
     private final MemoRepository memoRepository;
 
+    @Autowired // 생성자 1개일 때는 생략가능
     public MemoService(MemoRepository memoRepository) {
         this.memoRepository = memoRepository;
     }
+
+//    생성자에 직접 수동 등록하는 방법
+//    public MemoService(ApplicationContext context) {
+//        // 1. 'Bean'이름으로 가져오기
+//        MemoRepository memoRepository =  (MemoRepository) context.getBean("memoRepository");
+//        // 2. 'Bean'클래스 형식으로 가져오기
+//        MemoRepository memoRepository = context.getBean(MemoRepository.class);
+//        this.memoRepository = memoRepository;
+//    }
+
+
 
     public MemoResponseDto createMemo(MemoRequestDto requestDto) {
         // RequestDto -> Entity(데이터베이스 교환 객체)

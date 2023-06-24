@@ -3,10 +3,13 @@ package com.sparta.memo.repository;
 import com.sparta.memo.dto.MemoRequestDto;
 import com.sparta.memo.dto.MemoResponseDto;
 import com.sparta.memo.entity.Memo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,9 +17,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-public class MemoRepository {
+//@Component // 빈객체로 등록(생성자로 만들어서 주입해줌!, 옆에 콩모양 생김)
+@Repository
+public class MemoRepository { // 빈 등록이름: memoRepository
     private final JdbcTemplate jdbcTemplate;
-    public MemoRepository(JdbcTemplate jdbcTemplate) {
+    @Autowired // 생성자 1개 일때는 생략가능
+    public MemoRepository(JdbcTemplate jdbcTemplate) { // jdbcTemplates는 이미 자동으로 빈에서 관리되고 있음!!
         this.jdbcTemplate = jdbcTemplate;
     }
 
