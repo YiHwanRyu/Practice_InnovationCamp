@@ -3,6 +3,7 @@ package com.sparta.memo.repository;
 import com.sparta.memo.dto.MemoRequestDto;
 import com.sparta.memo.dto.MemoResponseDto;
 import com.sparta.memo.entity.Memo;
+import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -10,6 +11,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -86,5 +89,15 @@ public class MemoRepository { // 빈 등록이름: memoRepository
                 return null;
             }
         }, id);
+    }
+
+    @Transactional //(propagation = Propagation.REQUIRED) 부모메서드에 트랜젝션 존재하면 자식매서드의 트랜젝션을 합류시켜 한번에 함.
+    public Memo createMemo(EntityManager em) {
+        Memo memo = em.find(Memo.class, 1);
+        memo.setUsername("Robbert");
+        memo.setContents("@Transactional 전파 테스트 중! 2");
+
+        System.out.println("createMemo 메서드 종료");
+        return memo;
     }
 }
