@@ -11,4 +11,5 @@ import java.util.List;
 public interface MemoRepository extends JpaRepository<Memo, Long> {
     List<Memo> findAllByOrderByModifiedAtDesc(); // 메서드 이름으로 sql 가능!
 //    List<Memo> findAllByUsername(String username); // 특정 username인 것만 찾기
+    List<Memo> findAllByContentsContainsOrderByModifiedAtDesc(String keyword); // 특정 키워드 포함 조회, 수정시간 내림차순
 }

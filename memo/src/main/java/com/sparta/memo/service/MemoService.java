@@ -49,6 +49,11 @@ public class MemoService { // 빈 등록이름: memoService
         return memoRepository.findAllByOrderByModifiedAtDesc().stream().map(MemoResponseDto::new).toList();
     }
 
+    public List<MemoResponseDto> getMemosByKeyword(String keyword) {
+        //DB 조회
+        return memoRepository.findAllByContentsContainsOrderByModifiedAtDesc(keyword).stream().map(MemoResponseDto::new).toList();
+    }
+
     @Transactional // 변경감지를 적용하기위해! 다른 save, delete 등은 이미 메서드에 @Transactional이 한번 더 적용되어 있다.(트랜젝션 전파)
     public Long updateMemo(Long id, MemoRequestDto requestDto) {
         // 해당 메모가 DB에 존재하는지 확인
@@ -74,6 +79,5 @@ public class MemoService { // 빈 등록이름: memoService
                 new IllegalArgumentException("선택한 메모는 존재하지 않습니다.")
         );
     }
-
 
 }
