@@ -46,7 +46,7 @@ public class MemoService { // 빈 등록이름: memoService
 
     public List<MemoResponseDto> getMemos() {
         //DB 조회
-        return memoRepository.findAll().stream().map(MemoResponseDto::new).toList();
+        return memoRepository.findAllByOrderByModifiedAtDesc().stream().map(MemoResponseDto::new).toList();
     }
 
     @Transactional // 변경감지를 적용하기위해! 다른 save, delete 등은 이미 메서드에 @Transactional이 한번 더 적용되어 있다.(트랜젝션 전파)
