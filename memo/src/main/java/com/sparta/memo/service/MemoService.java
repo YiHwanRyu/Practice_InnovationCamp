@@ -4,11 +4,9 @@ import com.sparta.memo.dto.MemoRequestDto;
 import com.sparta.memo.dto.MemoResponseDto;
 import com.sparta.memo.entity.Memo;
 import com.sparta.memo.repository.MemoRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -34,7 +32,6 @@ public class MemoService { // 빈 등록이름: memoService
 //    }
 
 
-
     public MemoResponseDto createMemo(MemoRequestDto requestDto) {
         // RequestDto -> Entity(데이터베이스 교환 객체)
         Memo memo = new Memo(requestDto);
@@ -49,35 +46,34 @@ public class MemoService { // 빈 등록이름: memoService
 
     public List<MemoResponseDto> getMemos() {
         //DB 조회
-        return memoRepository.findAll();
+        return memoRepository.findAll().stream().map(MemoResponseDto::new).toList();
     }
 
+    @Transactional // 변경감지를 적용하기위해! 다른 save, delete 등은 이미 메서드에 @Transactional이 한번 더 적용되어 있다.(트랜젝션 전파)
     public Long updateMemo(Long id, MemoRequestDto requestDto) {
         // 해당 메모가 DB에 존재하는지 확인
-        Memo memo = memoRepository.findById(id);
-        if (memo != null) {
-            // memo 내용 수정
-            memoRepository.update(id, requestDto);
-            return id;
-        } else {
-            throw new IllegalArgumentException("선택한 메모는 존재하지 않습니다.");
-        }
+        Memo memo = findMemo(id);
+        // memo 내용 수정(영속성 컨텍스트의 변경감지를 통해, 즉, requestDto에 들어온 객체로 memo 객체(entity)를 업데이트 시킴)
+        memo.update(requestDto);
+
+        return id;
     }
 
     public Long deleteMemo(Long id) {
 
         // 해당 메모가 DB에 존재하는지 확인
-        Memo memo = memoRepository.findById(id);
-        if (memo != null) {
-            memoRepository.delete(id);
-            return id;
-        } else {
-            throw new IllegalArgumentException("선택한 메모는 존재하지 않습니다.");
-        }
+        Memo memo = findMemo(id);
+
+        // memo 삭제
+        memoRepository.delete(memo);
+        return id;
     }
 
-
-
+    private Memo findMemo(Long id) {
+        return memoRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("선택한 메모는 존재하지 않습니다.")
+        );
+    }
 
 
 }
