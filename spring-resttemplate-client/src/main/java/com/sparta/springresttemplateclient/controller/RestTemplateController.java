@@ -20,7 +20,7 @@ public class RestTemplateController {
     }
 
     @GetMapping("/get-call-obj")
-    public ItemDto getCallObject(String query) {
+    public ItemDto getCallObject(String query) { //@RequestParam 생략가능
         return restTemplateService.getCallObject(query);
     }
 
